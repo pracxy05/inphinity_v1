@@ -4,9 +4,9 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import TrlScale from '@/components/TrlScale';
 import { Icon } from '@/components/Icons';
-import { domains, domainName, formatOptions, mentors, type DomainId } from '@/lib/data';
+import { domains, domainName, formatOptions, type DomainId, type Mentor } from '@/lib/data';
 
-export default function MentorDirectory({ initialDomain }: { initialDomain?: DomainId }) {
+export default function MentorDirectory({ mentors, initialDomain }: { mentors: Mentor[]; initialDomain?: DomainId }) {
   const [query, setQuery] = useState('');
   const [picked, setPicked] = useState<DomainId[]>(initialDomain ? [initialDomain] : []);
   const [level, setLevel] = useState(0);
@@ -30,7 +30,7 @@ export default function MentorDirectory({ initialDomain }: { initialDomain?: Dom
         return true;
       })
       .sort((a, b) => (sort === 'experience' ? b.years - a.years : a.name.localeCompare(b.name)));
-  }, [query, picked, level, formats, fullyVerified, defence, sort]);
+  }, [mentors, query, picked, level, formats, fullyVerified, defence, sort]);
 
   const clear = () => {
     setQuery(''); setPicked([]); setLevel(0); setFormats([]); setFullyVerified(false); setDefence(false);
@@ -126,6 +126,7 @@ export default function MentorDirectory({ initialDomain }: { initialDomain?: Dom
                 <div className="tags">
                   {m.domains.map((d) => <span key={d} className="tag tag--solid">{domainName(d)}</span>)}
                   {m.defenceCleared && <span className="tag"><Icon name="defence" />&nbsp;Defence cleared</span>}
+                  {m.isSample && <span className="tag">Sample profile</span>}
                 </div>
 
                 <div className="grid grid--2" style={{ ['--gap' as string]: '20px' }}>
@@ -144,7 +145,7 @@ export default function MentorDirectory({ initialDomain }: { initialDomain?: Dom
                 <div className="tags">{m.formats.map((f) => <span key={f} className="tag">{f}</span>)}</div>
                 <div className="row" style={{ ['--gap' as string]: '8px' }}>
                   <Link href={`/mentors/${m.id}`} className="btn btn--secondary btn--sm">View profile</Link>
-                  <Link href="/student/new" className="btn btn--primary btn--sm">Request mentor</Link>
+                  {m.isSample ? <span className="btn btn--secondary btn--sm" aria-disabled="true" style={{ opacity: 0.6, pointerEvents: 'none' }}>Sample profile</span> : <Link href={`/student/new?mentor=${m.id}`} className="btn btn--primary btn--sm">Request mentor</Link>}
                 </div>
               </div>
             </article>
@@ -154,8 +155,8 @@ export default function MentorDirectory({ initialDomain }: { initialDomain?: Dom
         {results.length === 0 && (
           <div className="card">
             <div className="card__body stack" style={{ ['--gap' as string]: '10px' }}>
-              <h3>No mentors match all of these filters</h3>
-              <p className="muted small">Remove a filter to see more mentors, or post a mission request and let verified mentors come to you.</p>
+              <h3>{mentors.length === 0 ? 'No mentors are listed yet' : 'No mentors match all of these filters'}</h3>
+              <p className="muted small">{mentors.length === 0 ? 'Mentors appear here after they pass verification. You can post a mission request and mentors will find you.' : 'Remove a filter to see more mentors, or post a mission request and let verified mentors come to you.'}</p>
               <div className="row" style={{ ['--gap' as string]: '10px' }}>
                 <button type="button" className="btn btn--secondary btn--sm" onClick={clear}>Clear all filters</button>
                 <Link href="/student/new" className="btn btn--primary btn--sm">Post a mission request</Link>

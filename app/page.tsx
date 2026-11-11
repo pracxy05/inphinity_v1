@@ -14,7 +14,7 @@ const steps = [
 ] as const;
 
 const verification = [
-  { title: 'Identity', text: 'Government identity check through a verification partner. Mentors must be 18 or over.' },
+  { title: 'Identity', text: 'Government photo ID reviewed by our verification staff. Mentors must be 18 or over.' },
   { title: 'Credentials', text: 'Employment, education and publications checked against evidence, not self-description.' },
   { title: 'Domain review', text: 'A technical interview with a reviewer in the same field before any profile goes live.' },
   { title: 'Conflict and compliance', text: 'Background screening, conflict checks, and a separate clearance for defence-related projects.' },
@@ -35,7 +35,7 @@ export default function Home() {
               </p>
               <div className="row" style={{ ['--gap' as string]: '12px' }}>
                 <Link href="/student/new" className="btn btn--primary btn--lg">Request a mentor</Link>
-                <Link href="/mentor/apply" className="btn btn--secondary btn--lg">Apply as a mentor</Link>
+                <Link href="/register?role=mentor" className="btn btn--secondary btn--lg">Apply as a mentor</Link>
               </div>
               <ul className="hero-facts">
                 <li><Icon name="defence" /><span><b>Every mentor is verified.</b> Identity, credentials and a domain review come first.</span></li>
@@ -164,7 +164,7 @@ export default function Home() {
                 <Icon name="defence" />
                 <span><b>Defence and dual-use projects</b> go through a separate compliance review. Mentors for these projects hold an extra clearance on their profile.</span>
               </div>
-              <Link href="/mentor/apply" className="btn btn--secondary" style={{ alignSelf: 'flex-start' }}>See the application process</Link>
+              <Link href="/register?role=mentor" className="btn btn--secondary" style={{ alignSelf: 'flex-start' }}>Start an application</Link>
             </div>
             <div className="card">
               {verification.map((v, i) => (
@@ -188,9 +188,9 @@ export default function Home() {
               <p className="lede">Your designs and your identity are the product of real work. We built the platform to protect both.</p>
             </div>
             <div className="grid grid--3" style={{ ['--gap' as string]: '20px' }}>
-              <div className="card"><div className="card__body stack" style={{ ['--gap' as string]: '10px' }}><Icon name="lock" /><h4>Access by role</h4><p className="small muted">Support, finance, verification and security staff each see only what their job needs. Sensitive actions need a second approval.</p></div></div>
-              <div className="card"><div className="card__body stack" style={{ ['--gap' as string]: '10px' }}><Icon name="file" /><h4>Documents scanned and encrypted</h4><p className="small muted">Uploads are scanned before they are stored, encrypted at rest, and released only to people with a reason to open them.</p></div></div>
-              <div className="card"><div className="card__body stack" style={{ ['--gap' as string]: '10px' }}><Icon name="alert" /><h4>Restricted material stays out</h4><p className="small muted">Do not upload classified or export-controlled material. Project descriptions are screened, and restricted projects go to a review queue.</p></div></div>
+              <div className="card"><div className="card__body stack" style={{ ['--gap' as string]: '10px' }}><Icon name="lock" /><h4>Access by role</h4><p className="small muted">Support, finance, verification and security staff each see only what their job needs. Opening a verification document is logged.</p></div></div>
+              <div className="card"><div className="card__body stack" style={{ ['--gap' as string]: '10px' }}><Icon name="file" /><h4>Documents kept private</h4><p className="small muted">Uploads go to a private bucket, encrypted at rest, and are opened only through short-lived links by people with a reason to see them.</p></div></div>
+              <div className="card"><div className="card__body stack" style={{ ['--gap' as string]: '10px' }}><Icon name="alert" /><h4>Restricted material stays out</h4><p className="small muted">Do not upload classified or export-controlled material. Defence and dual-use projects go to a review queue before any mentor can see them.</p></div></div>
             </div>
             <p className="small muted measure" style={{ marginTop: 24 }}>
               InΦnity&apos;s security architecture is aligned to ISO/IEC 27001:2022 and the SOC 2 Trust Services Criteria. Independent certification is planned and has not yet been completed.

@@ -1,65 +1,55 @@
-# InΦnity: UI prototype v0.1
+# InΦnity
 
-Expert mentorship marketplace for student and startup teams building UAVs, CubeSats, CanSats, rockets and defence systems. This is the V1 interface: every screen is built and clickable, with sample data and no backend yet.
+Expert mentorship marketplace for student and startup teams building UAVs, CubeSats, CanSats, rockets and defence systems.
 
-Planned completion date (PDC) for V1: 15 October 2026.
+**v0.2: working platform.** Real accounts, mission requests, file uploads, mentor applications and verification, proposals, scheduled sessions with chat and notes, a contact form, and a role-based admin console, all stored in a database.
 
-## Run it
+## Try it on your computer (free, no accounts)
 
-You need **Node.js 20.9 or newer** (the LTS version from https://nodejs.org) and an internet connection the first time.
+You need **Node.js 20.9 or newer** (LTS from https://nodejs.org).
 
 | System | What to do |
 |---|---|
 | Windows | Double-click `start.bat` |
-| macOS or Linux | Run `./start.sh` in a terminal (first time: `chmod +x start.sh`) |
-| Any system | `npm install`, then `npm run dev` |
+| macOS or Linux | `./start.sh` (first time: `chmod +x start.sh`) |
+| Any system | `npm install`, then `npm run dev:local` |
 
-Then open http://localhost:3000. `start.bat` and `start.sh` install what the app needs on the first run, start it, and open your browser.
+Open http://localhost:3000. The first start takes a minute: it downloads a small local database, creates the tables, adds 8 sample mentors and a local staff login (`admin@local.test` / `local-admin-password`, printed in the window). Uploaded files are kept in `.data/uploads`.
 
-For a production-style run: `npm run build` then `npm start`.
+## Put it online
 
-## Screens
+See **[DEPLOY.md](DEPLOY.md)**: Vercel + Neon + Cloudflare R2, all free.
 
-| Address | Screen |
+## How it works
+
+| Piece | Where |
 |---|---|
-| `/` | Landing page |
-| `/sign-in` | Sign in (student, mentor or staff) |
-| `/student` | Student workspace: missions with status, readiness and PDC |
-| `/student/new` | Four-step mission request with compliance declarations |
-| `/mentors` | Mentor directory with working filters (`?domain=rocketry` pre-selects a domain) |
-| `/mentors/[id]` | Mentor profile, for example `/mentors/rhea-kulkarni` |
-| `/mentor` | Mentor workspace: requests, engagements, verification |
-| `/mentor/apply` | Mentor application and verification steps (18+ check included) |
-| `/session/demo` | Video session room with notes, shared data and chat |
-| `/admin` | Admin console with role-based views |
+| Pages (server-rendered, read the database directly) | `app/**/page.tsx` |
+| API for every change (sign-up, missions, uploads, review…) | `app/api/**/route.ts` |
+| Database tables | `db/migrations/*.sql` (add new numbered files for changes, then `npm run db:migrate`) |
+| Sign-in, roles, sessions | `lib/server/auth.ts` (password hashes + signed HttpOnly cookie) |
+| Who may see which file | `lib/server/files.ts` |
+| File storage (S3-compatible bucket, or local disk in development) | `lib/server/storage.ts` |
+| Colours, fonts, components | `app/globals.css` |
 
-## What is in it
+### Who can do what
 
-- **Technology Readiness Levels (1 to 9)** describe every project and every mentor's coverage.
-- **Status and PDC** (planned date of completion) on every mission.
-- **Ten domains**: UAV, CubeSat, CanSat, rockets and propulsion, avionics, RF and telemetry, GNC, payloads, ground segment, defence and dual-use.
-- **Compliance gate** for defence-related projects and cleared mentors.
-- **Three engagement formats**: hourly session, monthly package, fixed-price milestone.
-- **No prices anywhere.** Rates come from a rate card the company publishes later. Tier A, B and C appear as placeholders.
-- Technical line drawings are drawn in code, so there are no image downloads.
+- **Student:** create missions (with files), choose a mentor from proposals, schedule sessions, track progress.
+- **Mentor:** apply (ID + evidence), after approval see matching requests, send proposals, run sessions.
+- **Staff (admin):** Owner, Operations lead, Verification admin, Finance admin, Security admin, Support agent. Each sees only its own sections. Verification reviews applications and defence-flagged projects; opening an ID or evidence file is written to the audit log.
 
-## Change things
+### Useful commands
 
-| To change | Edit |
+| Command | Does |
 |---|---|
-| Mentors, projects, domains, admin tables | `lib/data.ts` |
-| Colours, fonts, spacing, components | `app/globals.css` (tokens at the top) |
-| Logo | `components/Logo.tsx`; files in `public/brand/` |
-| Illustrations | `components/Art.tsx` |
-| Page content | `app/<route>/page.tsx` |
+| `npm run dev:local` | Everything local (database + site) |
+| `npm run db:migrate` | Create/upgrade tables (`DATABASE_URL` required) |
+| `npm run db:seed` / `db:unseed` | Add / remove the sample mentors |
+| `npm run admin:create -- email "Name" 'password' [Role]` | Create a staff account |
+| `npm run user:reset-password -- email 'new password'` | Reset anyone's password |
+| `npm run smoke` | 66-check end-to-end test of a running site (`BASE`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`) |
+| `npm run typecheck` | TypeScript check |
 
-## What this version is not
+## Not built yet
 
-- All people, projects and figures are **sample data**.
-- Sign-in, forms and uploads do not save anything. There is no database or payment provider.
-- The session room shows where video connects. A video provider is added in the full build.
-- Security wording on the landing page says the architecture is *aligned to* ISO/IEC 27001 and SOC 2. It does not claim certification.
-
-## Tech
-
-Next.js 16, React 19, TypeScript 5, plain CSS. Fonts (IBM Plex Sans, IBM Plex Mono, Source Serif 4) are installed as packages, so the app works offline after the first install.
+Payments and the rate card, outgoing email (verification, password reset), an in-page video call (sessions open a private Jitsi room instead), automated virus scanning of uploads, passkeys / two-factor for staff, and real Terms/Privacy text. The security wording on the landing page says *aligned to* ISO 27001 / SOC 2, not certified.

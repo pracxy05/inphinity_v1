@@ -1,27 +1,73 @@
-'use client';
-
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
 import AppShell from '@/components/AppShell';
-import TrlScale from '@/components/TrlScale';
 import StatusPill from '@/components/StatusPill';
 import { Icon } from '@/components/Icons';
-import { requests, domainName, fmtDate, projects } from '@/lib/data';
+import MentorRequests, { type RequestItem } from '@/components/MentorRequests';
+import { pageUser } from '@/lib/server/auth';
+import { getMentorProfileByUser, missionsForMentor, requestsForMentor, sessionsForUser, effectiveStatus } from '@/lib/server/queries';
+import { domainName, fmtDate } from '@/lib/data';
+import { fmtToday, fmtTime, fmtDayShort } from '@/lib/format';
 
-const tabs = ['Recommended', 'New', 'Applied'] as const;
+export const dynamic = 'force-dynamic';
 
-export default function MentorHome() {
-  const [tab, setTab] = useState<(typeof tabs)[number]>('Recommended');
-  const list = useMemo(() => requests.filter((r) => r.tab === tab), [tab]);
+const STATUS_COPY: Record<string, { pill: string; tone: 'ok' | 'warn' | 'info' | 'crit'; text: string }> = {
+  draft: { pill: 'Application not submitted', tone: 'warn', text: 'Finish your application so our reviewers can start. Your profile stays hidden until all four checks are complete.' },
+  submitted: { pill: 'Application received', tone: 'info', text: 'Our verification team has your application. We will email you when the review starts.' },
+  in_review: { pill: 'In review', tone: 'info', text: 'A reviewer is checking your application. You can follow each stage here.' },
+  needs_info: { pill: 'More information needed', tone: 'warn', text: 'A reviewer asked for more information. Read their note below, update your application and resubmit.' },
+  rejected: { pill: 'Not approved', tone: 'crit', text: 'Your application was not approved. If you think this is a mistake, contact us.' },
+};
 
-  const engagements = projects.filter((p) => p.mentorId === 'rhea-kulkarni' || p.mentorId === 'kavya-reddy');
+export default async function MentorHome() {
+  const user = await pageUser('mentor');
+  const profile = await getMentorProfileByUser(user.id);
+  const first = user.name.replace(/^(dr|prof)\.?\s+/i, '').split(' ')[0];
+
+  if (!profile || profile.status !== 'approved') {
+    const st = STATUS_COPY[profile?.status ?? 'draft'];
+    return (
+      <AppShell role="mentor" title="Mentor workspace / Overview">
+        <div className="page-head">
+          <div className="stack" style={{ ['--gap' as string]: '6px' }}><h1>Welcome, {first}</h1><p className="muted">{fmtToday()}</p></div>
+          <span className={`pill pill--${st.tone}`}>{st.pill}</span>
+        </div>
+        <div className="card" style={{ maxWidth: 760 }}>
+          <div className="card__body stack" style={{ ['--gap' as string]: '16px' }}>
+            <p>{st.text}</p>
+            {profile?.review_note && <div className="notice notice--warn"><Icon name="info" /><span><b>Reviewer note:</b> {profile.review_note}</span></div>}
+            {(profile?.status === 'draft' || profile?.status === 'needs_info' || profile?.status === 'rejected') && (
+              <Link href="/mentor/apply" className="btn btn--primary" style={{ alignSelf: 'flex-start' }}>{profile?.status === 'draft' ? 'Complete your application' : 'Update and resubmit'}</Link>
+            )}
+            {profile && profile.status !== 'draft' && (
+              <div className="stack" style={{ ['--gap' as string]: '10px' }}>
+                {([['identity', 'Identity'], ['credentials', 'Credentials'], ['domainReview', 'Domain review'], ['background', 'Background and conflict check']] as const).map(([k, label]) => (
+                  <div key={k} className="row row--between"><span className="small">{label}</span><StatusPill status={profile.verified[k] ? 'Verified' : 'Pending'} /></div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </AppShell>
+    );
+  }
+
+  const [requests, engagements, sessions] = await Promise.all([
+    requestsForMentor(profile),
+    missionsForMentor(profile.id),
+    sessionsForUser(user.id, 'mentor'),
+  ]);
+  const items: RequestItem[] = requests.map((r) => ({
+    id: r.id, code: r.code, title: r.title, domain: r.domain, trl: r.trl, team: r.team_size, pdc: r.pdc, needs: r.needs,
+    summary: r.summary, match: r.match, proposalId: r.proposal_id, requestedYou: r.requested_you,
+  }));
+  const upcoming = sessions.find((s) => s.status === 'scheduled' && s.starts_at.getTime() > Date.now() - 3600_000);
 
   return (
     <AppShell role="mentor" title="Mentor workspace / Overview">
       <div className="page-head">
         <div className="stack" style={{ ['--gap' as string]: '6px' }}>
-          <h1>Good evening, Rhea</h1>
-          <p className="muted">Tuesday 13 October 2026</p>
+          <h1>Welcome back, {first}</h1>
+          <p className="muted">{fmtToday()}</p>
         </div>
         <span className="pill pill--ok">Verified mentor</span>
       </div>
@@ -29,119 +75,72 @@ export default function MentorHome() {
       <div className="card">
         <div className="grid grid--3" style={{ ['--gap' as string]: '0' }}>
           <div className="stat" style={{ borderRight: '1px solid var(--line)' }}>
-            <span className="stat__v">{requests.filter((r) => r.tab !== 'Applied').length}</span>
+            <span className="stat__v">{requests.filter((r) => !r.proposal_id).length}</span>
             <span className="stat__l">Requests matching your domains</span>
           </div>
           <div className="stat" style={{ borderRight: '1px solid var(--line)' }}>
-            <span className="stat__v">{engagements.length}</span>
+            <span className="stat__v">{engagements.filter((e) => e.status !== 'Completed').length}</span>
             <span className="stat__l">Active engagements</span>
           </div>
           <div className="stat">
-            <span className="stat__v">Sat 10:00</span>
-            <span className="stat__l">Next session, 17 Oct 2026</span>
+            <span className="stat__v">{upcoming ? fmtTime(upcoming.starts_at) : 'None'}</span>
+            <span className="stat__l">{upcoming ? `Next session, ${fmtDayShort(upcoming.starts_at)}` : 'No session booked'}</span>
           </div>
         </div>
       </div>
 
       <div className="dash">
         <div className="stack" style={{ ['--gap' as string]: '24px' }}>
-          <section className="card">
-            <div className="card__head">
-              <h2 style={{ fontSize: '1.15rem', fontFamily: 'var(--sans)' }}>Mission requests</h2>
-              <div className="seg" role="group" aria-label="Request filter">
-                {tabs.map((t) => (
-                  <button key={t} type="button" aria-pressed={tab === t} onClick={() => setTab(t)}>{t}</button>
-                ))}
-              </div>
-            </div>
-            <div>
-              {list.map((r, i) => (
-                <div key={r.id} className="card__body stack" style={{ ['--gap' as string]: '14px', borderTop: i ? '1px solid var(--line)' : 0 }}>
-                  <div className="row row--between row--top">
-                    <div className="stack" style={{ ['--gap' as string]: '4px', minWidth: 0 }}>
-                      <span className="mono xsmall muted">{r.mission}</span>
-                      <h3 style={{ fontSize: '1.1rem' }}>{r.title}</h3>
-                      <span className="small muted">{domainName(r.domain)} · team of {r.team} · <abbr title="Planned date of completion">PDC</abbr> {fmtDate(r.pdc)}</span>
-                    </div>
-                    <span className="pill pill--ok">{r.match}% fit</span>
-                  </div>
-                  <div className="grid grid--2" style={{ ['--gap' as string]: '20px' }}>
-                    <div className="stack" style={{ ['--gap' as string]: '6px' }}>
-                      <span className="xsmall muted">Readiness: TRL {r.trl}</span>
-                      <TrlScale value={r.trl} compact />
-                    </div>
-                    <div className="stack" style={{ ['--gap' as string]: '2px' }}>
-                      <span className="xsmall muted">Help wanted</span>
-                      <span className="small">{r.needs}</span>
-                    </div>
-                  </div>
-                  <div className="row" style={{ ['--gap' as string]: '8px' }}>
-                    {tab === 'Applied' ? (
-                      <button type="button" className="btn btn--secondary btn--sm">Withdraw proposal</button>
-                    ) : (
-                      <>
-                        <button type="button" className="btn btn--primary btn--sm">Send proposal</button>
-                        <button type="button" className="btn btn--secondary btn--sm">View details</button>
-                      </>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+          <MentorRequests items={items} />
 
           <section className="card">
             <div className="card__head"><h2 style={{ fontSize: '1.15rem', fontFamily: 'var(--sans)' }}>Active engagements</h2></div>
-            <div className="table-wrap">
-              <table className="table">
-                <thead>
-                  <tr><th>Mission</th><th>Domain</th><th>Status</th><th><abbr title="Planned date of completion">PDC</abbr></th><th /></tr>
-                </thead>
-                <tbody>
-                  {engagements.map((p) => (
-                    <tr key={p.id}>
-                      <td><div className="semibold">{p.title}</div><div className="mono xsmall muted">{p.mission}</div></td>
-                      <td className="small">{domainName(p.domain)}</td>
-                      <td><StatusPill status={p.status} /></td>
-                      <td className="mono small">{fmtDate(p.pdc)}</td>
-                      <td><Link href="/session/demo" className="btn btn--secondary btn--sm">Session room</Link></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            {engagements.length === 0 ? <div className="card__body"><p className="small muted">When a student chooses you, the engagement appears here.</p></div> : (
+              <div className="table-wrap">
+                <table className="table">
+                  <thead><tr><th>Mission</th><th>Domain</th><th>Status</th><th><abbr title="Planned date of completion">PDC</abbr></th><th /></tr></thead>
+                  <tbody>
+                    {engagements.map((p) => (
+                      <tr key={p.id}>
+                        <td><div className="semibold">{p.title}</div><div className="mono xsmall muted">{p.code} · {p.student_name}</div></td>
+                        <td className="small">{domainName(p.domain)}</td>
+                        <td><StatusPill status={effectiveStatus(p)} /></td>
+                        <td className="mono small">{fmtDate(p.pdc)}</td>
+                        <td><Link href={`/sessions?mission=${p.id}`} className="btn btn--secondary btn--sm">Schedule</Link></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </section>
         </div>
 
         <div className="stack" style={{ ['--gap' as string]: '24px' }}>
           <section className="card">
-            <div className="card__head"><h2 style={{ fontSize: '1.05rem', fontFamily: 'var(--sans)' }}>Your verification</h2><Link href="/mentor/apply" className="link small">Review</Link></div>
+            <div className="card__head"><h2 style={{ fontSize: '1.05rem', fontFamily: 'var(--sans)' }}>Your verification</h2></div>
             <div className="card__body stack" style={{ ['--gap' as string]: '12px' }}>
-              {['Identity', 'Credentials', 'Domain review', 'Background and conflict check'].map((c) => (
-                <div key={c} className="row row--between"><span className="small">{c}</span><StatusPill status="Verified" /></div>
+              {([['identity', 'Identity'], ['credentials', 'Credentials'], ['domainReview', 'Domain review'], ['background', 'Background and conflict check']] as const).map(([k, label]) => (
+                <div key={k} className="row row--between"><span className="small">{label}</span><StatusPill status={profile.verified[k] ? 'Verified' : 'Pending'} /></div>
               ))}
-              <div className="row row--between"><span className="small">Defence clearance</span><StatusPill status="Pending" /></div>
+              {profile.defence_opt_in && <div className="row row--between"><span className="small">Defence clearance</span><StatusPill status={profile.defence_cleared ? 'Verified' : 'Pending'} /></div>}
+              <Link href={`/mentors/${profile.slug}`} className="link small">View your public profile</Link>
             </div>
           </section>
 
           <section className="card">
             <div className="card__head"><h2 style={{ fontSize: '1.05rem', fontFamily: 'var(--sans)' }}>Earnings and payouts</h2></div>
             <div className="card__body stack" style={{ ['--gap' as string]: '12px' }}>
-              <p className="small muted">Rates follow the InΦnity rate card. Earnings and payout history appear here once rates are published.</p>
-              <div className="notice"><Icon name="info" /><span>Add and verify a payout account before your first engagement starts.</span></div>
-              <button type="button" className="btn btn--secondary btn--sm" style={{ alignSelf: 'flex-start' }}>Add payout account</button>
+              <p className="small muted">Rates follow the InΦnity rate card. Payments are not switched on yet; earnings and payouts will appear here once they are.</p>
+              <div className="notice"><Icon name="info" /><span>You will be able to add and verify a payout account before your first paid engagement starts.</span></div>
             </div>
           </section>
 
           <section className="card">
             <div className="card__head"><h2 style={{ fontSize: '1.05rem', fontFamily: 'var(--sans)' }}>Engagement formats</h2></div>
             <div className="card__body stack" style={{ ['--gap' as string]: '8px' }}>
-              <div className="tags">
-                <span className="tag">Hourly session</span>
-                <span className="tag">Monthly package</span>
-                <span className="tag">Fixed-price milestone</span>
-              </div>
-              <p className="xsmall muted">Rate card tier A applies to all three formats.</p>
+              <div className="tags">{profile.formats.map((f) => <span key={f} className="tag">{f}</span>)}</div>
+              <p className="xsmall muted">Rate card tier {profile.tier} applies to all formats.</p>
             </div>
           </section>
         </div>

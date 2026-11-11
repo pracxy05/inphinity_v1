@@ -4,8 +4,8 @@ REM Installs what the app needs (once), then starts it at http://localhost:3000
 cd /d "%~dp0"
 
 echo.
-echo   InPhinity UI prototype
-echo   ----------------------
+echo   InPhinity (local)
+echo   -----------------
 
 where node >nul 2>nul
 if errorlevel 1 (
@@ -34,9 +34,9 @@ if not exist node_modules (
   echo   Packages already installed.
 )
 
-echo   Starting the app. Your browser will open at http://localhost:3000
+echo   Starting the database and the app. Your browser will open at http://localhost:3000
 echo   Close this window or press Ctrl+C to stop.
 echo.
 
-start "" cmd /c "timeout /t 6 /nobreak >nul && start http://localhost:3000"
-call npm run dev
+start "" cmd /c "timeout /t 20 /nobreak >nul && start http://localhost:3000"
+call npm run dev:local

@@ -1,0 +1,577 @@
+[
+  {
+    "id": "rhea-kulkarni",
+    "name": "Dr. Rhea Kulkarni",
+    "initials": "RK",
+    "title": "Orbital mechanics and GNC specialist",
+    "background": "Doctorate in aerospace engineering. Spacecraft guidance work on small-satellite programmes.",
+    "domains": [
+      "gnc",
+      "cubesat"
+    ],
+    "trl": [
+      2,
+      7
+    ],
+    "years": 14,
+    "languages": [
+      "English",
+      "Hindi",
+      "Marathi"
+    ],
+    "timezone": "IST (UTC+5:30)",
+    "availability": "Weekends and two weekday evenings",
+    "grid": [
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true
+      ],
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true
+      ],
+      [
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false
+      ]
+    ],
+    "formats": [
+      "Hourly session",
+      "Monthly package",
+      "Fixed-price milestone"
+    ],
+    "tier": "A",
+    "verified": {
+      "identity": true,
+      "credentials": true,
+      "domainReview": true,
+      "background": true
+    },
+    "defenceCleared": false,
+    "bio": "Helps teams turn attitude determination and control ideas into estimators that run on real flight hardware. Prefers to start from the team's own simulation.",
+    "topics": [
+      "Attitude determination",
+      "Kalman filtering",
+      "Orbit propagation",
+      "Control design"
+    ]
+  },
+  {
+    "id": "arvind-nair",
+    "name": "Arvind Nair",
+    "initials": "AN",
+    "title": "Flight software and avionics engineer",
+    "background": "Flight computer firmware for launch and suborbital vehicles. Real-time systems and fault handling.",
+    "domains": [
+      "avionics",
+      "rocketry",
+      "uav"
+    ],
+    "trl": [
+      3,
+      8
+    ],
+    "years": 11,
+    "languages": [
+      "English",
+      "Malayalam",
+      "Hindi"
+    ],
+    "timezone": "IST (UTC+5:30)",
+    "availability": "Weekday evenings",
+    "grid": [
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ]
+    ],
+    "formats": [
+      "Hourly session",
+      "Fixed-price milestone"
+    ],
+    "tier": "A",
+    "verified": {
+      "identity": true,
+      "credentials": true,
+      "domainReview": true,
+      "background": true
+    },
+    "defenceCleared": false,
+    "bio": "Reviews flight software architecture, watchdog and recovery logic, and test plans before a team commits hardware.",
+    "topics": [
+      "RTOS design",
+      "Sensor fusion firmware",
+      "Fault tolerance",
+      "Hardware-in-the-loop testing"
+    ]
+  },
+  {
+    "id": "kavya-reddy",
+    "name": "Kavya Reddy",
+    "initials": "KR",
+    "title": "RF and telemetry engineer",
+    "background": "Radio links for balloons, CanSats and small satellites. Ground station design and licensing awareness.",
+    "domains": [
+      "rf",
+      "ground",
+      "cansat"
+    ],
+    "trl": [
+      2,
+      7
+    ],
+    "years": 9,
+    "languages": [
+      "English",
+      "Telugu",
+      "Hindi"
+    ],
+    "timezone": "IST (UTC+5:30)",
+    "availability": "Weekends and weekday mornings",
+    "grid": [
+      [
+        true,
+        false,
+        true,
+        false,
+        false,
+        true,
+        true
+      ],
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true
+      ],
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    ],
+    "formats": [
+      "Hourly session",
+      "Monthly package",
+      "Fixed-price milestone"
+    ],
+    "tier": "B",
+    "verified": {
+      "identity": true,
+      "credentials": true,
+      "domainReview": true,
+      "background": true
+    },
+    "defenceCleared": false,
+    "bio": "Walks teams through link budgets, antenna choice and range testing so the first flight does not end in a silent radio.",
+    "topics": [
+      "Link budgets",
+      "LoRa and S-band",
+      "Antenna selection",
+      "Ground station build"
+    ]
+  },
+  {
+    "id": "sanjay-verma",
+    "name": "Sanjay Verma",
+    "initials": "SV",
+    "title": "Defence systems engineer, retired services",
+    "background": "Long service in systems engineering and trials for airborne defence systems. Qualification and test discipline.",
+    "domains": [
+      "defence",
+      "uav",
+      "gnc"
+    ],
+    "trl": [
+      4,
+      9
+    ],
+    "years": 26,
+    "languages": [
+      "English",
+      "Hindi"
+    ],
+    "timezone": "IST (UTC+5:30)",
+    "availability": "Weekday afternoons",
+    "grid": [
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    ],
+    "formats": [
+      "Monthly package",
+      "Fixed-price milestone"
+    ],
+    "tier": "A",
+    "verified": {
+      "identity": true,
+      "credentials": true,
+      "domainReview": true,
+      "background": true
+    },
+    "defenceCleared": true,
+    "bio": "Focuses on requirements, verification and test planning for systems that must survive operational use. Works only with projects that pass the compliance review.",
+    "topics": [
+      "Requirements engineering",
+      "Qualification testing",
+      "Systems integration",
+      "Reliability"
+    ]
+  },
+  {
+    "id": "meenakshi-rao",
+    "name": "Prof. Meenakshi Rao",
+    "initials": "MR",
+    "title": "Propulsion and combustion researcher",
+    "background": "University researcher in propulsion. Hybrid and solid motor design, test stand safety and instrumentation.",
+    "domains": [
+      "rocketry"
+    ],
+    "trl": [
+      1,
+      6
+    ],
+    "years": 18,
+    "languages": [
+      "English",
+      "Kannada",
+      "Hindi"
+    ],
+    "timezone": "IST (UTC+5:30)",
+    "availability": "Saturday mornings",
+    "grid": [
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    ],
+    "formats": [
+      "Hourly session",
+      "Fixed-price milestone"
+    ],
+    "tier": "A",
+    "verified": {
+      "identity": true,
+      "credentials": true,
+      "domainReview": true,
+      "background": true
+    },
+    "defenceCleared": false,
+    "bio": "Guides student teams through motor design trade studies and, above all, safe static testing procedures.",
+    "topics": [
+      "Hybrid motors",
+      "Static test stands",
+      "Nozzle design",
+      "Test safety"
+    ]
+  },
+  {
+    "id": "imran-shaikh",
+    "name": "Imran Shaikh",
+    "initials": "IS",
+    "title": "UAV autopilot and flight-test lead",
+    "background": "Autopilot tuning and flight testing for fixed-wing and VTOL vehicles. Test card and log analysis practice.",
+    "domains": [
+      "uav",
+      "avionics"
+    ],
+    "trl": [
+      3,
+      8
+    ],
+    "years": 12,
+    "languages": [
+      "English",
+      "Hindi",
+      "Urdu"
+    ],
+    "timezone": "IST (UTC+5:30)",
+    "availability": "Weekends",
+    "grid": [
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true
+      ],
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true
+      ],
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    ],
+    "formats": [
+      "Hourly session",
+      "Monthly package"
+    ],
+    "tier": "B",
+    "verified": {
+      "identity": true,
+      "credentials": true,
+      "domainReview": true,
+      "background": false
+    },
+    "defenceCleared": false,
+    "bio": "Reads flight logs with the team, finds the real cause of oscillation or drift, and plans the next flight test.",
+    "topics": [
+      "PID and L1 tuning",
+      "Flight log analysis",
+      "VTOL transition",
+      "Test cards"
+    ]
+  },
+  {
+    "id": "tara-bhatt",
+    "name": "Dr. Tara Bhatt",
+    "initials": "TB",
+    "title": "CubeSat systems engineer",
+    "background": "Systems engineering across CubeSat missions from design review to in-orbit operations.",
+    "domains": [
+      "cubesat",
+      "payload",
+      "ground"
+    ],
+    "trl": [
+      3,
+      9
+    ],
+    "years": 16,
+    "languages": [
+      "English",
+      "Gujarati",
+      "Hindi"
+    ],
+    "timezone": "IST (UTC+5:30)",
+    "availability": "Weekday evenings and Sundays",
+    "grid": [
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      [
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false
+      ]
+    ],
+    "formats": [
+      "Hourly session",
+      "Monthly package",
+      "Fixed-price milestone"
+    ],
+    "tier": "A",
+    "verified": {
+      "identity": true,
+      "credentials": true,
+      "domainReview": true,
+      "background": true
+    },
+    "defenceCleared": false,
+    "bio": "Prepares teams for design reviews: power and thermal budgets, interface control, test campaigns and launch provider requirements.",
+    "topics": [
+      "Design reviews",
+      "Power and thermal budgets",
+      "Environmental testing",
+      "Operations planning"
+    ]
+  },
+  {
+    "id": "rohan-desai",
+    "name": "Rohan Desai",
+    "initials": "RD",
+    "title": "Embedded, IoT and power systems engineer",
+    "background": "Low-power embedded design for sensor nodes and CanSats. Battery, regulation and PCB review.",
+    "domains": [
+      "avionics",
+      "cansat",
+      "payload"
+    ],
+    "trl": [
+      1,
+      6
+    ],
+    "years": 8,
+    "languages": [
+      "English",
+      "Hindi",
+      "Marathi"
+    ],
+    "timezone": "IST (UTC+5:30)",
+    "availability": "Weekday evenings",
+    "grid": [
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false
+      ]
+    ],
+    "formats": [
+      "Hourly session",
+      "Monthly package",
+      "Fixed-price milestone"
+    ],
+    "tier": "C",
+    "verified": {
+      "identity": true,
+      "credentials": true,
+      "domainReview": false,
+      "background": false
+    },
+    "defenceCleared": false,
+    "bio": "Reviews schematics and boards with first-time hardware teams so the first prototype powers up and stays up.",
+    "topics": [
+      "Schematic review",
+      "Low-power design",
+      "Battery systems",
+      "Sensor interfaces"
+    ]
+  }
+]

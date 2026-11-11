@@ -15,6 +15,7 @@ export default function SiteFooter() {
           <div>
             <h4>Students</h4>
             <ul className="footer__list">
+              <li><Link href="/register">Create an account</Link></li>
               <li><Link href="/student/new">Request a mentor</Link></li>
               <li><Link href="/mentors">Browse mentors</Link></li>
               <li><Link href="/#readiness">Technology readiness</Link></li>
@@ -24,10 +25,10 @@ export default function SiteFooter() {
           <div>
             <h4>Mentors</h4>
             <ul className="footer__list">
-              <li><Link href="/mentor/apply">Apply to mentor</Link></li>
+              <li><Link href="/register?role=mentor">Apply to mentor</Link></li>
               <li><Link href="/#verification">How we verify</Link></li>
               <li><Link href="/mentor">Mentor workspace</Link></li>
-              <li><Link href="/session/demo">Session room</Link></li>
+              <li><Link href="/sessions">Sessions</Link></li>
             </ul>
           </div>
           <div>
@@ -35,22 +36,22 @@ export default function SiteFooter() {
             <ul className="footer__list">
               <li><Link href="/#domains">Domains</Link></li>
               <li><Link href="/#security">Security and data</Link></li>
-              <li><Link href="/admin">Admin console</Link></li>
+              <li><Link href="/contact">Contact us</Link></li>
               <li><Link href="/sign-in">Sign in</Link></li>
             </ul>
           </div>
           <div>
             <h4>Legal</h4>
             <ul className="footer__list">
-              <li><span className="small">Terms of use (draft)</span></li>
-              <li><span className="small">Privacy notice (draft)</span></li>
+              <li><Link href="/terms">Terms of use (draft)</Link></li>
+              <li><Link href="/privacy">Privacy notice (draft)</Link></li>
               <li><span className="small">Mentor code of conduct (draft)</span></li>
               <li><span className="small">Academic integrity policy (draft)</span></li>
             </ul>
           </div>
         </div>
         <div className="footer__base">
-          <span>© 2026 InΦnity. UI prototype v0.1, sample data only.</span>
+          <span>© 2026 InΦnity. Early access.</span>
           <span>Students and mentors must be 18 or over.</span>
         </div>
       </div>

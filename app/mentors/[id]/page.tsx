@@ -4,11 +4,10 @@ import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import TrlScale from '@/components/TrlScale';
 import { Icon } from '@/components/Icons';
-import { getMentor, mentors, domainName } from '@/lib/data';
+import { domainName } from '@/lib/data';
+import { getApprovedMentor } from '@/lib/server/queries';
 
-export function generateStaticParams() {
-  return mentors.map((m) => ({ id: m.id }));
-}
+export const dynamic = 'force-dynamic';
 
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const slots = ['Morning', 'Afternoon', 'Evening'];
@@ -21,7 +20,7 @@ const formatText: Record<string, string> = {
 
 export default async function MentorProfile({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const m = getMentor(id);
+  const m = await getApprovedMentor(id);
   if (!m) notFound();
 
   const checks = [
@@ -50,8 +49,14 @@ export default async function MentorProfile({ params }: { params: Promise<{ id: 
                 </div>
               </div>
               <div className="row" style={{ ['--gap' as string]: '10px' }}>
-                <Link href="/session/demo" className="btn btn--secondary">Book 15-minute intro</Link>
-                <Link href="/student/new" className="btn btn--primary">Request mentorship</Link>
+                {m.isSample ? (
+                  <span className="pill pill--neutral">Sample profile: booking is off</span>
+                ) : (
+                  <>
+                    <Link href={`/sessions?intro=${m.id}`} className="btn btn--secondary">Book 15-minute intro</Link>
+                    <Link href={`/student/new?mentor=${m.id}`} className="btn btn--primary">Request mentorship</Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
